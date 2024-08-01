@@ -1,10 +1,8 @@
 import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
 
-const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com/";
-
 export function getImageUrl(imageId) {
-    return DOMAIN + "/api/img/" + imageId;
+    return "/api/img/" + imageId;
 }
 
 export function getToken() {
@@ -61,7 +59,7 @@ function createRequest(method, url, data, additions = {}) {
     const token = getToken();
     const config = {
         method: method,
-        url: DOMAIN + url,
+        url: url,
         data: data,
         ...additions
     };
