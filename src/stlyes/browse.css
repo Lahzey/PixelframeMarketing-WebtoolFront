@@ -1,0 +1,22 @@
+.Browse {
+    width: 70%;
+    height: 100%;
+    padding: 50px 0;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.Browse-header {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 50px;
+}
+
+.Browse-titleFilter {
+    flex-grow: 1;
+}

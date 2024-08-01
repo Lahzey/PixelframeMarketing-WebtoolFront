@@ -1,0 +1,209 @@
+.Product {
+    display: grid;
+    margin: 50px;
+    grid-template-rows: 1fr;
+}
+
+.Product.owned {
+    grid-template-rows: auto 1fr auto;
+}
+
+.Product-tabContainer {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 20px;
+}
+
+.Product-tab {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    cursor: pointer;
+    border-left: 2px solid var(--text-black);
+    border-right: 2px solid var(--text-black);
+    font-weight: bold;
+}
+
+.Product-tab.active {
+    background-color: var(--background-dark);
+    color: var(--text-white);
+}
+
+.Product-tab.disabled {
+    background-color: var(--background-gray);
+    cursor: not-allowed;
+}
+
+.Product-editButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+/* region ProductOverview */
+.ProductOverview {
+    
+}
+
+
+.ProductOverview-head {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+
+.ProductOverview-headLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.ProductOverview-headRight {
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 601px) {
+    .ProductOverview-headLeft {
+        width: 50%;
+    }
+    .ProductOverview-headRight {
+        flex-grow: 1;
+        align-items: end;
+    }
+}
+
+
+@media only screen and (max-width: 601px) {
+    .ProductOverview-headLeft {
+        flex-grow: 1;
+    }
+}
+
+.ProductOverview-title {
+    font-size: 4em;
+    text-align: start;
+}
+
+.ProductOverview-stats {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    font-size: 1.3em;
+}
+
+.ProductOverview-statLabel {
+    text-align: start;
+}
+
+.ProductOverview-statValue {
+    text-align: start;
+}
+
+.ProductOverview-contractsLink {
+    flex-grow: 1;
+    display: flex;
+    align-items: end;
+    text-decoration: none;
+    align-self: start;
+    margin-top: 20px;
+    font-size: 1.3em;
+}
+
+.ProductOverview-image {
+
+}
+/* endregion */
+
+/* region ProductEdit */
+.ProductEdit{
+    
+}
+.ProductEdit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.ProductEdit-label {
+    font-weight: bold !important;
+}
+.ProductEdit-visibilityToggle {
+    display: flex;
+    justify-content: end;
+}
+.ProductEdit-split {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 50px;
+}
+.ProductEdit-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.ProductEdit-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.ProductEdit-previewImage {
+    height: 128px;
+    align-self: start;
+}
+/* endregion */
+
+/* region ProductPreview */
+.ProductPreview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 75px;
+}
+
+.ProductPreview>*:last-child {
+    flex: 1;
+}
+
+.ProductPreview-title {
+    text-align: start;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.ProductPreview-content {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    overflow: hidden;
+}
+
+.ProductPreview-content > * {
+    flex: 1;
+}
+/* endregion */
+
+/* region ProductPage */
+.ProductPage {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
+    overflow: auto;
+}
+.ProductPage-title {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+[hidden]{
+    display:none;
+}
+/* endregion */

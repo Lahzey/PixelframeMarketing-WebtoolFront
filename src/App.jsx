@@ -1,0 +1,43 @@
+import "./stlyes/global.css";
+import React from 'react';
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Browse from "./pages/Browse";
+import Page from "./pages/components/Page";
+import {RecoilRoot} from "recoil";
+import Product from "./pages/Product";
+import {ChakraProvider} from "@chakra-ui/react";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Page footer><Home/></Page>,
+    },
+    {
+        path: "/dashboard",
+        element: <Page header footer><Dashboard/></Page>,
+    },
+    {
+        path: "/browse",
+        element: <Page header footer><Browse/></Page>,
+    },
+    {
+        path: "/games/:id",
+        element: <Page header footer><Product type="GAME"/></Page>,
+    },
+    {
+        path: "/brands/:id",
+        element: <Page header footer><Product type="BRAND"/></Page>,
+    },
+]);
+
+export default function App() {
+    return (
+        <RecoilRoot>
+            <ChakraProvider>
+                <RouterProvider router={router}/>
+            </ChakraProvider>
+        </RecoilRoot>
+    );
+}

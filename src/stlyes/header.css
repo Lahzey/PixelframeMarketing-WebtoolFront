@@ -1,0 +1,127 @@
+
+.Header {
+    background-color: var(--background-dark) !important;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+}
+
+.Header a {
+    color: var(--text-white); /* necessary because default <a> styling overrides .Header styling for some reason */
+}
+
+.Header-title {
+    padding: 10px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    font-family: "arcade_roundedregular", sans-serif;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.Header-title:hover {
+    color: var(--text-white-hover);
+}
+
+.Header-title>span {
+    white-space: nowrap;
+}
+
+.Header-title>img {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    object-fit: contain;
+    align-self: center;
+}
+
+.Header-contentWrapper {
+    align-self: stretch;
+}
+
+.Header-content {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    align-self: stretch;
+}
+
+.Header-link {
+    text-decoration: none;
+    padding: 0px 25px 0px 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Header-link.active {
+    background-color: var(--theme-dark);
+}
+
+.Header-link:hover {
+    color: var(--text-white-hover);
+}
+
+.Header-dropdownToggle::after {
+    display: none !important;
+}
+
+.Header-collapseYWrapper {
+    display: grid;
+    transition: grid-template-rows 0.5s ease-out;
+    width: 100%;
+}
+
+.Header-collapseYWrapper>div {
+    overflow: hidden;
+}
+
+.Header-collapsedY {
+    grid-template-rows: 0fr;
+}
+
+.Header-expandedY {
+    grid-template-rows: 1fr;
+}
+
+@media only screen and (max-width: 600px) {
+    .Header {
+        flex-wrap: wrap;
+    }
+
+    .Header-contentWrapper {
+        flex-basis: 100%;
+    }
+
+    .Header-content {
+        flex-direction: column;
+    }
+
+    .Header-toggle {
+        margin-left: auto;
+        cursor: pointer;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .Header-contentWrapper {
+        margin-left: 20px;
+        flex-grow: 1;
+    }
+
+    .UserWidget {
+        margin-left: auto;
+    }
+
+    .Header-toggle {
+        display: none;
+    }
+
+    .Header-collapseYWrapper {
+        grid-template-rows: 1fr;
+    }
+}

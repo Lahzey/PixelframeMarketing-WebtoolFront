@@ -1,0 +1,8 @@
+.Footer {
+    min-height: 60px;
+    background-color: var(--background-gray);
+    color: var(--text-black);
+    box-shadow: 0px -2px 10px #282c34;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}

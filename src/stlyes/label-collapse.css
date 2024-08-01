@@ -1,0 +1,32 @@
+.Collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease-out;
+}
+
+.Collapse.open {
+    grid-template-rows: 1fr;
+}
+
+.Collapse-inner {
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr;
+}
+
+.LabelCollapse {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.LabelCollapse-label {
+    cursor: pointer;
+    display: flex;
+    gap: 5px;
+}
+
+.LabelCollapse>*:last-child {
+    flex: 1;
+}

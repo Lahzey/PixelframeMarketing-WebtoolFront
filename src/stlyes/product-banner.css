@@ -1,0 +1,54 @@
+.ProductBanner {
+    border: 3px solid var(--border-color);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text-black);
+}
+
+.ProductBanner:hover {
+    filter: brightness(105%);
+    color: var(--text-black-hover);
+}
+
+.ProductBanner-content {
+    display: flex;
+}
+
+.ProductBanner-contentLeft {
+    flex-grow: 1;
+    margin-right: 20px;
+}
+
+.ProductBanner-contentRight {
+    max-height: 200px;
+    max-width: 100px;
+    object-fit: contain;
+}
+
+.ProductBanner-tag {
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+}
+
+.ProductBanner-metaData {
+    display: flex;
+    gap: 5px;
+    padding: 5px 0px 15px;
+    font-style: italic;
+}
+
+.ProductBanner-ageRestriction {
+    margin-left: auto;
+}
+
+.ProductBanner-description {
+    text-align: left;
+    white-space: pre-wrap;
+}
+
+.ProductBanner-buttonPanel {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}

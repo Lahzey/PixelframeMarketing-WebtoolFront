@@ -1,0 +1,42 @@
+.UserWidget {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.UserWidget-loginButton {
+    text-decoration: none;
+    border: 2px solid var(--text-white);
+    padding: 10px 25px;
+    border-radius: 5px;
+}
+
+.UserWidget:hover .UserWidget-loginButton {
+    background-color: var(--text-white);
+    color: var(--text-black);
+}
+
+.UserWidget-userImage {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.UserWidget-userName {
+}
+
+.UserWidget-accountInfo {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: var(--background-dark);
+}
+
+[hidden]{
+    display:none;
+}

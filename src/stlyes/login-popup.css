@@ -1,0 +1,62 @@
+.LoginPopup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+}
+
+.LoginPopup-form {
+    display: flex;
+    flex-direction: column;
+    width: min(90%, 1000px);
+    background-color: var(--background-light);
+    color: var(--text-black);
+    border: 1px solid #888;
+    text-align: start;
+}
+
+.LoginPopup-inputContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 5px;
+}
+
+.LoginPopup-previewImage {
+    height: 128px;
+    width: 128px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.LoginPopup-loginButton {
+    margin-top: 10px;
+    align-self: end;
+}
+
+.LoginPopup-belowLogin {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .LoginPopup-belowLogin {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+}
+
+.LoginPopup-functionLink {
+    color: #0000ee;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.LoginPopup-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #b6b6b6;
+    padding: 25px;
+}

@@ -1,0 +1,222 @@
+:root {
+    --theme-lightest: hsl(269, 57%, 90%);
+    --theme-lighter: hsl(269, 57%, 90%);
+    --theme-light: hsl(269, 30%, 60%);
+    --theme-dark: hsl(269, 30%, 60%);
+    --theme-darker: hsl(269, 30%, 30%);
+    --theme-darkest: hsl(269, 30%, 30%);
+    --background-light: #e8e8e8;
+    --border-light: var(--theme-darkest);
+    --background-dark: var(--theme-darkest);
+    --border-dark: var(--theme-lightest);
+    --background-gray: #b6b6b6;
+    --text-white: #ede3e9;
+    --text-white-hover: #ffffff;
+    --text-black: #49424b;
+    --text-black-hover: #766a7a;
+    --text-gray: #938b94;
+    --text-gray-hover: #baafbb;
+    --primary: var(--theme-light);
+    --primary-active: var(--theme-dark);
+    --primary-disabled: var(--theme-lightest);
+    --secondary: #6c757d;
+    --secondary-active: #5a6268;
+    --secondary-disabled: #9fa5aa;
+    --success: #28a745;
+    --success-active: #218838;
+    --success-disabled: #73c686;
+    --error: #dc3545;
+    --error-active: #c82333;
+    --error-disabled: #e87c86;
+    --warning: #ffc107;
+    --warning-active: #e0a800;
+    --warning-disabled: #ffd75e;
+    --info: #17a2b8;
+    --info-active: #138496;
+    --info-disabled: #68c2d1;
+    --light: #f8f9fa;
+    --light-active: #e2e6ea;
+    --light-disabled: #fafbfc;
+}
+
+@font-face {
+    font-family: "arcade_roundedregular";
+    src: url("../fonts/arcade_r-webfont.woff2") format("woff2"),
+    url("../fonts/arcade_r-webfont.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    background-color: var(--background-light);
+    color: var(--text-black);
+}
+
+.app {
+    font-family: sans-serif;
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+}
+
+.page-content {
+    flex: 1; /* 1 and it will fill whole space left if no flex value are set to other children*/
+    background: var(--background-light);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.page-content > * {
+    flex: 1;
+}
+
+.modal {
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.list-item-bg-light {
+    background-color: var(--background-light);
+}
+
+.list-item-bg-dark {
+    background-color: var(--text-white);
+}
+
+.animated-rotation {
+    transition: transform 0.15s ease-in-out;
+}
+
+/* region buttons */
+.button {
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    color: var(--text-color);
+    background-color: var(--normal-color);
+    text-wrap: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    
+    /* layout in case there are multiple children (like icon and text) */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.button:hover {
+    background-color: var(--hover-color);
+}
+
+.button:active {
+    background-color: var(--active-color);
+}
+
+.button.active {
+    background-color: var(--active-color);
+}
+
+.button:disabled {
+    background-color: var(--disabled-color);
+}
+
+.button-outline {
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+    border-radius: 5px;
+    border: 1px solid var(--normal-color);
+    color: var(--normal-color);
+    background-color: transparent;
+    text-wrap: nowrap;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.button-outline:hover {
+    color: var(--text-color);
+    background-color: var(--normal-color);
+}
+
+.button-outline:active {
+    color: var(--text-color);
+    background-color: var(--active-color);
+}
+
+.button-outline.active {
+    color: var(--text-color);
+    background-color: var(--active-color);
+}
+
+.button-outline:disabled {
+    color: var(--disabled-color);
+    border-color: var(--disabled-color);
+}
+
+.primary {
+    --text-color: white;
+    --normal-color: var(--primary);
+    --hover-color: var(--primary-active);
+    --active-color: var(--primary-active);
+    --disabled-color: var(--primary-disabled);
+}
+
+.secondary {
+    --text-color: white;
+    --normal-color: var(--secondary);
+    --hover-color: var(--secondary-active);
+    --active-color: var(--secondary-active);
+    --disabled-color: var(--secondary-disabled);
+}
+
+.success {
+    --text-color: white;
+    --normal-color: var(--success);
+    --hover-color: var(--success-active);
+    --active-color: var(--success-active);
+    --disabled-color: var(--success-disabled);
+}
+
+.error {
+    --text-color: white;
+    --normal-color: var(--error);
+    --hover-color: var(--error-active);
+    --active-color: var(--error-active);
+    --disabled-color: var(--error-disabled);
+}
+
+.warning {
+    --text-color: #212529;
+    --normal-color: var(--warning);
+    --hover-color: var(--warning-active);
+    --active-color: var(--warning-active);
+    --disabled-color: var(--warning-disabled);
+}
+
+.info {
+    --text-color: white;
+    --normal-color: var(--info);
+    --hover-color: var(--info-active);
+    --active-color: var(--info-active);
+    --disabled-color: var(--info-disabled);
+}
+
+.light {
+    --text-color: #212529;
+    --normal-color: var(--light);
+    --hover-color: var(--light-active);
+    --active-color: var(--light-active);
+    --disabled-color: var(--light-disabled);
+}
+/* endregion */
