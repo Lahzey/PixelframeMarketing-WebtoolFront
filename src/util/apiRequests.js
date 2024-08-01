@@ -1,6 +1,12 @@
 import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
 
+const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com/";
+
+export function getImageUrl(imageId) {
+    return DOMAIN + "/api/img/" + imageId;
+}
+
 export function getToken() {
     return sessionStorage.getItem("token") ?? localStorage.getItem("token");
 }
@@ -55,7 +61,7 @@ function createRequest(method, url, data, additions = {}) {
     const token = getToken();
     const config = {
         method: method,
-        url: url,
+        url: DOMAIN + url,
         data: data,
         ...additions
     };
@@ -74,10 +80,6 @@ function post(url, data, additions = {}) {
 
 function put(url, data, additions = {}) {
     return createRequest('put', url,  data, additions);
-}
-
-export function getImageUrl(imageId) {
-    return "/api/img/" + imageId;
 }
 
 export function uploadImage(image) {
