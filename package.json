@@ -2,7 +2,6 @@
   "name": "webtool-front",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com",
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.0",

@@ -1,8 +1,11 @@
 import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
 
+const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com/";
+// const DOMAIN = "http://localhost:8080";
+
 export function getImageUrl(imageId) {
-    return "/api/img/" + imageId;
+    return DOMAIN + "/api/img/" + imageId;
 }
 
 export function getToken() {
@@ -17,6 +20,8 @@ export function getUserIdFromToken(token) {
 
 export function autoCatch(validationHandler, createErrorMessage) {
     return (error) => {
+        console.log("auto caught error:");
+        console.log(error);
         if (error.response) {
             if (validationHandler && error.response.status === 400 && error.response.data.errorMap) {
                 validationHandler(error.response.data.errorMap);
@@ -59,12 +64,14 @@ function createRequest(method, url, data, additions = {}) {
     const token = getToken();
     const config = {
         method: method,
-        url: url,
+        url: DOMAIN + url,
         data: data,
         ...additions
     };
     if (!config.headers) config.headers = {};
     config.headers.Authorization = token ? `Bearer ${token}` : "";
+    console.log("Creating " + method + " request to " + url + ":");
+    console.log(config);
     return axios(config);//.then(result => {console.log("then"); console.log(result);}).catch(result => {console.log("catch"); console.log(result);}).finally(() => {console.log("finally");});
 }
 

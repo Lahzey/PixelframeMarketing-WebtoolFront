@@ -404,7 +404,8 @@ function submitProduct(product, setProduct, navigate) {
     }
     const promise = product.id ? updateProduct(productToSubmit) : createProduct(productToSubmit);
     promise.then(response => {
-        setProduct(response.data);
+        const product = response.data;
+        setProduct(product);
         navigate((product.type === "GAME" ? "/games/" : "/brands/") + product.id);
     }).catch(autoCatchModal("Failed to " + (product.id ? "update" : "create") + " product.\nTry again later."));
 }

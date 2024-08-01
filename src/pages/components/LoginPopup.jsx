@@ -63,9 +63,8 @@ export default function LoginPopup({close, showRegister, registerRole}) {
                 const token = response.data;
                 storage.setItem("token", token);
                 
-                if (after) after();
-                
                 fetchUser(getUserIdFromToken(token)).then((response) => {
+                    if (after) after(response.data);
                     setUser(response.data);
                     close();
                 }).catch(autoCatchAlert());
@@ -74,10 +73,11 @@ export default function LoginPopup({close, showRegister, registerRole}) {
 
         const registerWithImage = () => {
             registerUser(user).then(response => {
-                login(() => {
+                login((user) => {
                     uploadImage(image).then((response) => {
-                        user.imageId = response.data.id;
-                        updateUser(user);
+                        updateUser({...user,  imageId: response.data.id}).then(() => {
+                            // TODO: notify user of success
+                        }).catch(autoCatchModal("Failed to update user with new image.\nYour account has still been created, please try updating your profile picture at a later time."))
                     }).catch(autoCatchModal("Image upload failed.\nYour account has still been created, please try updating your profile picture at a later time."));
                 });
             }).catch(autoCatchModal("User registration failed.", errors => setInputErrors(errors)));
