@@ -1,7 +1,7 @@
 import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
 
-const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com/";
+const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com";
 // const DOMAIN = "http://localhost:8080";
 
 export function getImageUrl(imageId) {
