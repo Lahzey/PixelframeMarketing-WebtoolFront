@@ -2,7 +2,7 @@ import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
 import {spawnAlert, spawnOkModal} from "./Dialogs";
 
-const DOMAIN = "https://pixelframe-marketing-backend-7a2d8d71a8ed.herokuapp.com/";
+const DOMAIN = "https://pixelframe-marketing-backend-7a2d8d71a8ed.herokuapp.com";
 // const DOMAIN = "http://localhost:8080";
 
 export function getImageUrl(imageId) {
