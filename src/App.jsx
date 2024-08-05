@@ -8,6 +8,7 @@ import Page from "./pages/components/Page";
 import {RecoilRoot} from "recoil";
 import Product from "./pages/Product";
 import {ChakraProvider} from "@chakra-ui/react";
+import {DialogsRoot} from "./util/Dialogs";
 
 const router = createBrowserRouter([
     {
@@ -36,7 +37,9 @@ export default function App() {
     return (
         <RecoilRoot>
             <ChakraProvider>
-                <RouterProvider router={router}/>
+                <DialogsRoot>
+                    <RouterProvider router={router}/>
+                </DialogsRoot>
             </ChakraProvider>
         </RecoilRoot>
     );

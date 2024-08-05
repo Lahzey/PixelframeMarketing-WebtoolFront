@@ -20,7 +20,7 @@ export default function ProductBanner({product, index = 0, imageOverride = null}
         <Link to={"/" + urlType + "/" + product.id} className={"ProductBanner " + (index % 2 ? "list-item-bg-dark" : "list-item-bg-light")}>
             <div className="ProductBanner-content">
                 <div className="ProductBanner-contentLeft">
-                    <h2 className="ProductBanner-title">{product.title}</h2>
+                    <span className="ProductBanner-title">{product.title}</span>
                     <div className="ProductBanner-metaData">
                         {tagSpans}
                         <span className="ProductBanner-ageRestriction">

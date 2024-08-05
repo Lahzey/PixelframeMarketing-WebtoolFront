@@ -1,38 +1,42 @@
 import "../stlyes/product.css"
 import React, {useEffect, useState} from "react";
-import {Link, redirect, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import ProductBanner from "./components/ProductBanner";
 import {LabelCollapse} from "./components/Collapse";
 import Select from "react-select";
 import {useAllTags, USER} from "../util/dataStore";
 import {IoMdEye, IoMdEyeOff} from "react-icons/io";
-import {ResponsiveLine} from "@nivo/line";
 import {FormControl, FormErrorMessage, FormLabel, Input, Textarea} from "@chakra-ui/react";
 import {autoCatch, autoCatchModal, createProduct, fetchProduct, getImageUrl, updateProduct, uploadImage} from "../util/apiRequests";
 import {useRecoilValue} from "recoil";
+import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
+import PageEditor from "./components/PageEditor";
+import {ProductRevenueChart} from "./components/ProductRevenueChart";
 
 export default function Product({type = "GAME"}) {
     const { id } = useParams();
     const user = useRecoilValue(USER);
     const [product, setProduct] = useState(id === "new" ? createEmptyProduct(type, user.id) : null);
+    const [originalProduct, setOriginalProduct] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (id !== "new") {
-            createProductFetch(id, setProduct, setLoading, setError);
+            createProductFetch(id, setProduct, setOriginalProduct, setLoading, setError);
         } else {
             setLoading(false);
             setError(null);
+            setOriginalProduct(product);
         }
     }, [id]);
     
     if (loading) return <div className="Product">Loading...</div>
     if (error) return <div className="Product">{error}</div>
-    else return <ProductContent product={product} setProduct={setProduct} isOwner={product.ownerId === user.id} />
+    else return <ProductContent product={product} setProduct={setProduct} originalProduct={originalProduct} setOriginalProduct={setOriginalProduct} isOwner={product.ownerId === user.id}/>
 }
 
-function ProductContent({product, setProduct, isOwner}) {
+function ProductContent({product, setProduct, originalProduct, setOriginalProduct, isOwner}) {
     const [currentTab, setCurrentTab] = useState(product.id ? "overview" : "edit");
     const [inputErrors, setInputErrors] = useState({});
     const navigate = useNavigate();
@@ -51,9 +55,9 @@ function ProductContent({product, setProduct, isOwner}) {
     }
     
     const discardChanges = () => {
-        // TODO confirmation dialog
-        if (product.id) fetchProduct(product.id);
-        else createEmptyProduct(product.type, product.ownerId);
+        spawnYesNoModal({title: "Discard changes", content: "Are you sure you wish to discard all changes you made?", onYes: () => {
+            setProduct(originalProduct);
+        }});
     }
 
     if (isOwner) {
@@ -67,7 +71,7 @@ function ProductContent({product, setProduct, isOwner}) {
                 {content}
                 <div className="Product-editButtonContainer" hidden={!product.hasChanges}>
                     <span className="button error" onClick={discardChanges}>Discard changes</span>
-                    <span className="button success" onClick={() => submitProduct(product, setProduct, navigate)}>Save changes</span>
+                    <span className="button success" onClick={() => submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate)}>Save changes</span>
                 </div>
             </div>
         );
@@ -113,34 +117,17 @@ function ProductOverview({product}) {
     );
 }
 
-const customStyles = {
-    option: (provided, state) => ({
-        ...provided,
-        color: state.data?.color ?? "#fff",
-    }),
-    multiValue: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.data?.color ?? "#fff",
-    }),
-    multiValueLabel: (provided, state) => ({
-        ...provided,
-        color: 'white',
-    }),
-    multiValueRemove: (provided, state) => ({
-        ...provided,
-        color: 'white',
-        ':hover': {
-            backgroundColor: state.data?.color ?? "#fff",
-            color: 'black',
-        },
-    }),
-};
-
 function ProductEdit({product, setProduct, inputErrors}) {
     const tagOptions = useAllTags().map(tag => { return {value: tag.name, label: tag.name, color: tag.categoryColor}; });
+    
     const getOptionsFromValues = (values) => {
         return values.map(value => tagOptions.find(option => option.value === value));
     };
+
+    const getValuesFromOptions = (options) => {
+        return options.map(option => option.value);
+    };
+    
     const updateProduct = (newProps) => {
         setProduct({
             ...product,
@@ -148,12 +135,31 @@ function ProductEdit({product, setProduct, inputErrors}) {
             hasChanges: true
         });
     };
-
-    const getValuesFromOptions = (options) => {
-        return options.map(option => option.value);
-    };
     
     const isPublic = product.visibility === "PUBLIC";
+
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            color: state.data?.color ?? "#fff",
+        }),
+        multiValue: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.data?.color ?? "#fff",
+        }),
+        multiValueLabel: (provided, state) => ({
+            ...provided,
+            color: 'white',
+        }),
+        multiValueRemove: (provided, state) => ({
+            ...provided,
+            color: 'white',
+            ':hover': {
+                backgroundColor: state.data?.color ?? "#fff",
+                color: 'black',
+            },
+        }),
+    };
 
     return (
         <div className="ProductEdit">
@@ -214,20 +220,17 @@ function ProductEdit({product, setProduct, inputErrors}) {
                             />
                             <FormErrorMessage>{inputErrors["thumbnailUpload"]}</FormErrorMessage>
                         </FormControl>
-                        <img
+                        <img className="ProductEdit-previewImage"
                             src={product.thumbnailUpload ? URL.createObjectURL(product.thumbnailUpload) : getImageUrl(product.thumbnailId)}
-                            className="ProductEdit-previewImage"
                             alt={product.thumbnailUpload ? "Your upload" : "Default thumbnail image"}
                         />
                     </div>
                 </div>
 
-                <FormControl isInvalid={inputErrors["content"] !== undefined}>
+                <FormControl isInvalid={inputErrors["pageContent"] !== undefined}>
                     <FormLabel className="ProductEdit-label">Page Content *</FormLabel>
-                    <Textarea placeholder="Page Content" value={product.pageContent} rows={10} maxLength={40000} backgroundColor="white" onChange={(e) => {
-                        updateProduct({content: e.target.value});
-                    }}/>
-                    <FormErrorMessage>{inputErrors["content"]}</FormErrorMessage>
+                    <FormErrorMessage>{inputErrors["pageContent"]}</FormErrorMessage>
+                    <PageEditor product={product} updateProduct={updateProduct}/>
                 </FormControl>
             </form>
         </div>
@@ -260,89 +263,6 @@ function ProductPage({product}) {
     );
 }
 
-function ProductRevenueChart({product}) {
-    const monthlyRevenue = {
-        id: "monthly",
-        data: []
-    };
-    const totalRevenue = {
-        id: "total",
-        data: []
-    };
-
-    let totalValue = 0;
-    product.monthlyRevenue.forEach(timedValue => {
-        monthlyRevenue.data.push({x: new Date(timedValue.time), y: timedValue.value});
-        totalValue += timedValue.value;
-        totalRevenue.data.push({x: new Date(timedValue.time), y: totalValue});
-        console.log("[" + timedValue.time + "] -> " + new Date(timedValue.time).toString());
-    });
-    // new Date(timedValue.time).toISOString().split("T")[0]
-    const data = [monthlyRevenue, totalRevenue];
-    return (
-        <ResponsiveLine
-            data={data}
-            margin={{ top: 50, right: 110, bottom: 50, left: 80 }}
-            xScale={{
-                type: "time",
-                format: "native",
-                precision: "month"
-            }}
-            yScale={{
-                type: "linear",
-            }}
-            axisBottom={{
-                format: "%b %Y",
-                tickValues: "every month",
-                legend: "Time",
-                legendOffset: 40,
-                legendPosition: "middle"
-            }}
-            axisLeft={{
-                format: (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\''),
-                legend: "Revenue",
-                legendOffset: -60,
-                legendPosition: "middle"
-            }}
-            enableGridX={true}
-            enableGridY={false}
-            colors={{ scheme: "nivo" }}
-            pointSize={10}
-            pointColor={{ theme: "background" }}
-            pointBorderWidth={2}
-            pointBorderColor={{ from: "serieColor" }}
-            pointLabelYOffset={-12}
-            useMesh={true}
-            legends={[
-                {
-                    anchor: "bottom-right",
-                    direction: "column",
-                    justify: false,
-                    translateX: 100,
-                    translateY: 0,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 80,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                        {
-                            on: "hover",
-                            style: {
-                                itemBackground: "rgba(0, 0, 0, .03)",
-                                itemOpacity: 1
-                            }
-                        }
-                    ]
-                }
-            ]}
-        />
-    );
-}
-
 function createEmptyProduct(type, userId) {
     return {
         type: type,
@@ -363,19 +283,34 @@ function createEmptyProduct(type, userId) {
     }
 }
 
-function createProductFetch(id, setProduct, setLoading, setError) {
+function createProductFetch(id, setProduct, setOriginalProduct, setLoading, setError) {
     setError(null);
     setLoading(true);
     fetchProduct(id).then(response => {
         setLoading(false);
         setProduct(response.data);
+        setOriginalProduct(response.data);
     }).catch(autoCatch(null,  (errorMessage) => {
         setLoading(false);
         setError(<p><b>Failed to load product.</b><br/>Reason:<br/>{errorMessage}</p>);
     }));
 }
 
-function submitProduct(product, setProduct, navigate) {
+function submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate, confirmed = false) {
+    if (!confirmed) {
+        const isPublic = product.visibility === "PUBLIC";
+        const message = 
+            <p>
+                Are you sure you want to save your changes?<br/>
+                Your product is <b>{product.visibility}</b> and will therefore{isPublic ? "" : " not"} be considered for matching.
+            </p>
+        spawnYesNoModal({title: "Confirm Save", content: message, onYes: () => {
+            submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate, true);
+        }});
+        return;
+    }
+    setInputErrors({});
+    
     // handle image upload
     if (product.thumbnailUpload) {
         uploadImage(product.thumbnailUpload).then(response => {
@@ -385,8 +320,10 @@ function submitProduct(product, setProduct, navigate) {
                 thumbnailUpload: null
             }
             setProduct(newProduct);
-            submitProduct(newProduct, setProduct);
-        }).catch(autoCatchModal("Failed to upload thumbnail image.\nTry again later."));
+            submitProduct(newProduct, setProduct, setOriginalProduct, setInputErrors, navigate, true);
+        }).catch(autoCatchModal("Failed to upload thumbnail image", (validationErrors) => {
+            setInputErrors(validationErrors);
+        }));
         return;
     }
     
@@ -406,6 +343,10 @@ function submitProduct(product, setProduct, navigate) {
     promise.then(response => {
         const product = response.data;
         setProduct(product);
+        setOriginalProduct(product);
         navigate((product.type === "GAME" ? "/games/" : "/brands/") + product.id);
-    }).catch(autoCatchModal("Failed to " + (product.id ? "update" : "create") + " product.\nTry again later."));
+        spawnAlert({content: "Changes saved successfully", status: "success"});
+    }).catch(autoCatchModal("Failed to " + (product.id ? "update" : "create") + " product", (validationErrors) => {
+        setInputErrors(validationErrors);
+    }));
 }

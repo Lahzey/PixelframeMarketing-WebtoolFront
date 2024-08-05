@@ -152,7 +152,8 @@
 }
 .ProductEdit-previewImage {
     height: 128px;
-    align-self: start;
+    align-self: center;
+    flex-grow: 1;
 }
 /* endregion */
 

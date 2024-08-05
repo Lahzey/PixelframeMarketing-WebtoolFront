@@ -64,19 +64,19 @@ export default function LoginPopup({close, showRegister, registerRole}) {
                 storage.setItem("token", token);
                 
                 fetchUser(getUserIdFromToken(token)).then((response) => {
-                    if (after) after(response.data);
                     setUser(response.data);
+                    if (after) after(response.data);
                     close();
                 }).catch(autoCatchAlert());
             }).catch(autoCatchModal("Failed to log in.", errors => setInputErrors(errors)));
         }
 
         const registerWithImage = () => {
-            registerUser(user).then(response => {
+            registerUser(user).then(registerResponse => {
                 login((user) => {
-                    uploadImage(image).then((response) => {
-                        updateUser({...user,  imageId: response.data.id}).then(() => {
-                            // TODO: notify user of success
+                    uploadImage(image).then((uploadResponse) => {
+                        updateUser({...user,  imageId: uploadResponse.data.id}).then(updateResponse => {
+                            setUser(updateResponse.data);
                         }).catch(autoCatchModal("Failed to update user with new image.\nYour account has still been created, please try updating your profile picture at a later time."))
                     }).catch(autoCatchModal("Image upload failed.\nYour account has still been created, please try updating your profile picture at a later time."));
                 });

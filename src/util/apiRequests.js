@@ -1,5 +1,6 @@
 import axios from "axios";
 import {getReasonPhrase} from "http-status-codes";
+import {spawnAlert, spawnOkModal} from "./Dialogs";
 
 const DOMAIN = "https://pixelframe-marketing-webtool-e4b94c3dd1de.herokuapp.com";
 // const DOMAIN = "http://localhost:8080";
@@ -18,48 +19,6 @@ export function getUserIdFromToken(token) {
     return payload.sub;
 }
 
-export function autoCatch(validationHandler, createErrorMessage) {
-    return (error) => {
-        console.log("auto caught error:");
-        console.log(error);
-        if (error.response) {
-            if (validationHandler && error.response.status === 400 && error.response.data.errorMap) {
-                validationHandler(error.response.data.errorMap);
-            } else {
-                let message = "";
-                if (error.response.data.errorType) {
-                    message = error.response.data.errorType + ": " + error.response.data.message;
-                } else {
-                    message = "An unexpected error occurred.";
-                }
-                createErrorMessage(error.response.status + " - " + getReasonPhrase(error.response.status) + "\n" + message)
-            }
-        } else {
-            createErrorMessage("A network error occurred.\nPlease check your internet connection and try again.");
-        }
-    };
-}
-
-export function autoCatchLog(message, validationHandler = null) {
-    return autoCatch(validationHandler, (reason) => {
-        console.log(message + ": " + reason);
-    });
-}
-
-export function autoCatchAlert(message, validationHandler = null) {
-    return autoCatch(validationHandler, (reason) => {
-        console.log(message + ": " + reason);
-        // todo
-    });
-}
-
-export function autoCatchModal(message, validationHandler = null) {
-    return autoCatch(validationHandler, (reason) => {
-        console.log(message + ": " + reason);
-        // todo
-    });
-}
-
 function createRequest(method, url, data, additions = {}) {
     const token = getToken();
     const config = {
@@ -72,7 +31,7 @@ function createRequest(method, url, data, additions = {}) {
     config.headers.Authorization = token ? `Bearer ${token}` : "";
     console.log("Creating " + method + " request to " + url + ":");
     console.log(config);
-    return axios(config);//.then(result => {console.log("then"); console.log(result);}).catch(result => {console.log("catch"); console.log(result);}).finally(() => {console.log("finally");});
+    return axios(config);
 }
 
 function get(url, additions = {}) {
@@ -87,11 +46,56 @@ function put(url, data, additions = {}) {
     return createRequest('put', url,  data, additions);
 }
 
+export function autoCatch(validationHandler, createErrorMessage) {
+    return (error) => {
+        console.log("auto caught error:");
+        console.log(error);
+        if (error.response) {
+            if (validationHandler && error.response.status === 400 && error.response.data.errorMapping) {
+                validationHandler(error.response.data.errorMapping);
+            } else {
+                let message = error.response.data.message ?? error.response.status + " - " + getReasonPhrase(error.response.status);
+                createErrorMessage(message)
+            }
+        } else {
+            createErrorMessage("A network error occurred.\nPlease check your internet connection and try again.");
+        }
+    };
+}
+
+export function autoCatchLog(title, validationHandler = null) {
+    return autoCatch(validationHandler, (reason) => {
+        console.log(title + ": " + reason);
+    });
+}
+
+export function autoCatchAlert(title, validationHandler = null) {
+    return autoCatch(validationHandler, (reason) => {
+        spawnAlert({title: title,  content: reason, status: "error"});
+    });
+}
+
+export function autoCatchModal(title, validationHandler = null) {
+    return autoCatch(validationHandler, (reason) => {
+        spawnOkModal({title: title,  content: reason, status: "error"});
+    });
+}
+
 export function uploadImage(image) {
     const formData = new FormData();
-    formData.append("file", image);
+    formData.append("upload", image);
     
     return post("/api/img", formData, { headers: {'Content-Type': 'multipart/form-data'} });
+}
+
+export function getImageUploadAdapter() {
+    const token = getToken();
+    return {
+        uploadUrl: DOMAIN + "/api/img",
+        headers: {
+            Authorization: token ? `Bearer ${token}` : ""
+        }
+    }
 }
 
 export function registerUser(user) {

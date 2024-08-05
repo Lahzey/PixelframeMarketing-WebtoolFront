@@ -1,5 +1,6 @@
 import {atom, selector, useRecoilState} from "recoil";
 import {fetchTags, fetchUser, getToken, getUserIdFromToken} from "./apiRequests";
+import {get} from "axios";
 
 const initialUserSelector = selector({
     key: "initialUserSelector",
@@ -17,12 +18,12 @@ const initialUserSelector = selector({
 });
 
 export const USER = atom({
-    key: "user",
+    key: "USER",
     default: initialUserSelector
 });
 
 const TAGS_DATA = atom({
-   key: "tagsData",
+   key: "TAGS_DATA",
    default: {
        value: [],
        isFetching: false,
