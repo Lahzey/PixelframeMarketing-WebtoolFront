@@ -1,15 +1,12 @@
 import "../../stlyes/footer.css"
+import {Link} from "react-router-dom";
 
 export default function Footer() {
     return (
         <footer className="Footer">
-            <div style={{width: "100%"}}>
-                <p>About Us</p>
-                <p>Contact</p>
-            </div>
-            <div style={{width: "100%"}}>
-                <p>Copyright © 2024 Pixelframe Marketing</p>
-            </div>
+            <Link to="/about">About Us</Link>
+            <a href="mailto: admin@pixelframemarketing.ch">Contact</a>
+            <p>Copyright © 2024 Pixelframe Marketing</p>
         </footer>
     );
 }

@@ -9,11 +9,12 @@ import {RecoilRoot} from "recoil";
 import Product from "./pages/Product";
 import {ChakraProvider} from "@chakra-ui/react";
 import {DialogsRoot} from "./util/Dialogs";
+import About from "./pages/About";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Page footer><Home/></Page>,
+        element: <Page footer defaultPadding={false}><Home/></Page>,
     },
     {
         path: "/dashboard",
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
     {
         path: "/brands/:id",
         element: <Page header footer><Product type="BRAND"/></Page>,
+    },
+    {
+        path: "/about",
+        element: <Page header footer><About/></Page>,
     },
 ]);
 

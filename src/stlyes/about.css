@@ -1,0 +1,14 @@
+.About {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.About-title {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.About-content {
+    font-size: 1.5em;
+}

@@ -4,13 +4,18 @@ import {USER} from "../util/dataStore";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import LoginPopup from "./components/LoginPopup";
+import icon from "../images/pixelframe_icon.png";
 
 export default function Home() {
     const [user, setUser] = useRecoilState(USER);
     const [loginForward, setLoginForward] = useState("");
     
     return (
-        <div style={{height: "100%", display: "grid"}}>
+        <div className="Home">
+            <div className="Home-header">
+                <img src={icon} alt="Logo" width={64} height={64}/>
+                <span>Pixelframe Marketing</span>
+            </div>
             <div className="Home-trailerContainer">
                 <video preload="auto" autoPlay loop="loop" muted="muted">
                     <source src="https://media.sciencephoto.com/image/k0054472/preview/K0054472-Apollo_11_Saturn_V_launch_close-up,_1969.mp4" type="video/mp4"/>
@@ -21,14 +26,26 @@ export default function Home() {
             <div className="Home-content">
                 <div className="Home-leftLinkContainer">
                     {user ?
-                        <Link to="/browse" className="Home-guideLink">{"> Browse"}</Link> : 
-                        <span onClick={() => setLoginForward("GAME_DEV")} className="Home-guideLink">{"> Im an Indie Dev"}</span>
+                        <Link to="/browse" className="Home-guideLink">
+                            <span className="Home-guideLinkArrowRight">{">"}</span>
+                            <span className="Home-guideLinkLabelRight">Browse</span>
+                        </Link> :
+                        <span onClick={() => setLoginForward("GAME_DEV")} className="Home-guideLink">
+                            <span className="Home-guideLinkArrowRight">{">"}</span>
+                            <span className="Home-guideLinkLabelRight">Browse</span>
+                        </span>
                     }
                 </div>
                 <div className="Home-rightLinkContainer">
                     {user ?
-                        <Link to="/dashboard" className="Home-guideLink">{"Dashboard <"}</Link> : 
-                        <span onClick={() => setLoginForward("ADVERTISER")} className="Home-guideLink">{"I want to Advertise <"}</span>
+                        <Link to="/dashboard" className="Home-guideLink">
+                            <span className="Home-guideLinkLabelLeft">Dashboard</span>
+                            <span className="Home-guideLinkArrowLeft">{"<"}</span>
+                        </Link> :
+                        <span onClick={() => setLoginForward("ADVERTISER")} className="Home-guideLink">
+                            <span className="Home-guideLinkLabelLeft">Dashboard</span>
+                            <span className="Home-guideLinkArrowLeft">{"<"}</span>
+                        </span>
                     }
                 </div>
             </div>

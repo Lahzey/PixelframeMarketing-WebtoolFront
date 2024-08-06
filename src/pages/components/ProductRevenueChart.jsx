@@ -2,6 +2,8 @@ import {ResponsiveLine} from "@nivo/line";
 import React from "react";
 
 export function ProductRevenueChart({product}) {
+    if (product.monthlyRevenue.length === 0) return <span>No data to display</span>
+    
     const monthlyRevenue = {
         id: "monthly",
         data: []
@@ -16,9 +18,7 @@ export function ProductRevenueChart({product}) {
         monthlyRevenue.data.push({x: new Date(timedValue.time), y: timedValue.value});
         totalValue += timedValue.value;
         totalRevenue.data.push({x: new Date(timedValue.time), y: totalValue});
-        console.log("[" + timedValue.time + "] -> " + new Date(timedValue.time).toString());
     });
-    // new Date(timedValue.time).toISOString().split("T")[0]
     const data = [monthlyRevenue, totalRevenue];
     return (
         <ResponsiveLine

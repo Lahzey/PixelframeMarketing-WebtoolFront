@@ -1,23 +1,37 @@
+.Home {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.Home-header {
+    background-color: var(--background-dark) !important;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-family: "arcade_roundedregular", sans-serif;
+    font-weight: bold;
+    font-size: 2.5em;
+}
+
 .Home-trailerContainer {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
     overflow: hidden;
 }
 
 .Home-trailerContainer>video {
-    width: 100%;
-    height: 100%;
     filter: blur(15px);
     object-fit: cover;
 }
 
 .Home-content {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
     display: flex;
     flex-flow: column;
     align-items: center;
-    height: 100%;
     z-index: 2;
     position: relative;
 }
@@ -35,6 +49,8 @@
 }
 
 .Home-guideLink {
+    display: flex;
+    gap: 20px;
     color: var(--text-white) !important;
     cursor: pointer;
     text-decoration: none;
@@ -44,4 +60,46 @@
 
 .Home-guideLink:hover {
     color: var(--text-white-hover) !important;
+}
+
+.Home-guideLinkArrowRight {
+    transition: transform 0.2s;
+}
+
+.Home-guideLink:hover .Home-guideLinkArrowRight {
+    transform: translate(20px, 0);
+}
+
+.Home-guideLink:active .Home-guideLinkArrowRight {
+    transform: translate(200px, 0) scale(8, 0.25);
+}
+
+.Home-guideLinkLabelRight {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.2s;
+}
+
+.Home-guideLink:active .Home-guideLinkLabelRight {
+    clip-path: inset(0 0 0 100%);
+}
+
+.Home-guideLinkArrowLeft {
+    transition: transform 0.2s;
+}
+
+.Home-guideLink:hover .Home-guideLinkArrowLeft {
+    transform: translate(-20px, 0);
+}
+
+.Home-guideLink:active .Home-guideLinkArrowLeft {
+    transform: translate(-280px, 0) scale(11, 0.25);
+}
+
+.Home-guideLinkLabelLeft {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.2s;
+}
+
+.Home-guideLink:active .Home-guideLinkLabelLeft {
+    clip-path: inset(0 100% 0 0);
 }

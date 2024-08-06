@@ -1,6 +1,5 @@
 .Product {
     display: grid;
-    margin: 50px;
     grid-template-rows: 1fr;
 }
 
@@ -115,7 +114,8 @@
 }
 
 .ProductOverview-image {
-
+    height: 300px;
+    object-fit: contain;
 }
 /* endregion */
 

@@ -102,8 +102,8 @@ function ProductOverview({product}) {
                         <span className="ProductOverview-statLabel">{revenueLabel}:</span>
                         <span className="ProductOverview-statValue" style={revenueStyle}>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(revenue)}</span>
                     </div>
-                    <Link to={(product.type === "GAME" ? "/game/" : "/brand/") + product.id + "/contracts"} className="ProductOverview-contractsLink"><span className="button-outline info">Contracts [{product.contracts.length}]</span></Link>
                     <ProductRevenueChart product={product}/>
+                    <Link to={(product.type === "GAME" ? "/game/" : "/brand/") + product.id + "/contracts"} className="ProductOverview-contractsLink"><span className="button-outline info">Contracts [{product.contracts.length}]</span></Link>
                 </div>
                 <div className="ProductOverview-headRight">
                     <img
