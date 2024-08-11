@@ -1,5 +1,5 @@
 import "../../stlyes/product-list.css"
-import ProductBanner from "./ProductBanner";
+import ProductBanner, {LoadingProductBanner} from "./ProductBanner";
 import {useEffect, useState} from "react";
 import {autoCatchAlert, filterProducts} from "../../util/apiRequests";
 import {Divider, Spinner} from "@chakra-ui/react";
@@ -17,21 +17,36 @@ export default function ProductList({query}) {
     }, [query, page]);
     
     var items = [];
-    items.push(<Divider borderColor="gray"/>);
+    items.push(<Divider key="ProductList-topDivider" borderColor="gray"/>);
     
     if (loading) {
-        items.push(<span className="ProductList-loading"><Spinner/></span>);
+        items.push(<span key="ProductList-loading" className="ProductList-loading"><Spinner/></span>);
     }
     
     products.forEach((product, index) => {
-        if (index > 0) items.push(<Divider borderColor="gray"/>);
-        items.push(<ProductBanner product={product} index={index}/>);
+        if (index > 0) items.push(<Divider key={"ProductList-divider" + product.id} borderColor="gray"/>);
+        items.push(<ProductBanner key={"ProductList-banner" + product.id} product={product} index={index}/>);
     });
     
     if (products.length === 0) {
-        items.push(<span className="ProductList-noData">No data to display.</span>);
+        items.push(<span key="ProductList-noData" className="ProductList-noData">No data to display.</span>);
     }
     
+    return (
+        <div className="ProductList">
+            {items}
+        </div>
+    );
+}
+
+export function LoadingProductList({size}) {
+    var items = [];
+    items.push(<Divider key="ProductList-topDivider" borderColor="gray"/>);
+    for (let i = 0; i < size; i++) {
+        if (i > 0) items.push(<Divider key={"ProductList-divider" + i} borderColor="gray"/>);
+        items.push(<LoadingProductBanner key={"ProductList-banner" + i} index={i}/>);
+    }
+
     return (
         <div className="ProductList">
             {items}

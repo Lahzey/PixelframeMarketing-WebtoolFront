@@ -3,6 +3,7 @@ import {useRecoilValue} from "recoil";
 import {useAllTags, USER} from "../../util/dataStore";
 import {Link} from "react-router-dom";
 import {getImageUrl} from "../../util/apiRequests";
+import Rand from "rand-seed";
 
 export default function ProductBanner({product, index = 0, imageOverride = null}) {
     const user = useRecoilValue(USER);
@@ -41,5 +42,35 @@ export default function ProductBanner({product, index = 0, imageOverride = null}
                 </div> : ""
             }
         </Link>
+    );
+}
+
+export function LoadingProductBanner({index = 0}) {
+    const random = new Rand((index * 987) + "");
+    const randomInt = (max) => {
+        return Math.floor(random.next() * max);
+    }
+    
+    return (
+        <div className={"ProductBanner " + (index % 2 ? "list-item-bg-dark" : "list-item-bg-light")}>
+            <div className="ProductBanner-content loadingAnimation">
+                <div className="ProductBanner-contentLeft">
+                    <span className="ProductBanner-title loadingPlaceholder" style={{alignSelf: "start"}}>{" ".repeat(20 + randomInt(30))}</span>
+                    <div className="ProductBanner-metaData">
+                        <span className="ProductBanner-tag loadingPlaceholder">{" ".repeat(5 + randomInt(10))}</span>
+                        <span className="ProductBanner-tag loadingPlaceholder">{" ".repeat(5 + randomInt(10))}</span>
+                        <span className="ProductBanner-tag loadingPlaceholder">{" ".repeat(5 + randomInt(10))}</span>
+                        <span className="ProductBanner-ageRestriction loadingPlaceholder">{" ".repeat(15 + randomInt(35))}</span>
+                    </div>
+                    <p className="ProductBanner-description">
+                        <span className="loadingPlaceholder">{" ".repeat(10 + randomInt(150))}</span><br/>
+                        <span className="loadingPlaceholder">{" ".repeat(10 + randomInt(150))}</span><br/>
+                        <span className="loadingPlaceholder">{" ".repeat(10 + randomInt(150))}</span><br/>
+                        <span className="loadingPlaceholder">{" ".repeat(10 + randomInt(150))}</span><br/>
+                    </p>
+                </div>
+                <span className="ProductBanner-contentRight loadingPlaceholder" style={{width: 100, height: 150}}/>
+            </div>
+        </div>
     );
 }

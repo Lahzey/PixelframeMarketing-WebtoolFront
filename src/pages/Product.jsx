@@ -4,11 +4,11 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import ProductBanner from "./components/ProductBanner";
 import {LabelCollapse} from "./components/Collapse";
 import Select from "react-select";
-import {useAllTags, USER} from "../util/dataStore";
+import {TITLE_OVERRIDE, useAllTags, USER} from "../util/dataStore";
 import {IoMdEye, IoMdEyeOff} from "react-icons/io";
 import {FormControl, FormErrorMessage, FormLabel, Input, Textarea} from "@chakra-ui/react";
 import {autoCatch, autoCatchModal, createProduct, fetchProduct, getImageUrl, updateProduct, uploadImage} from "../util/apiRequests";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
 import PageEditor from "./components/PageEditor";
 import {ProductRevenueChart} from "./components/ProductRevenueChart";
@@ -16,20 +16,32 @@ import {ProductRevenueChart} from "./components/ProductRevenueChart";
 export default function Product({type = "GAME"}) {
     const { id } = useParams();
     const user = useRecoilValue(USER);
-    const [product, setProduct] = useState(id === "new" ? createEmptyProduct(type, user.id) : null);
+    const [product, setProduct] = useState(null);
     const [originalProduct, setOriginalProduct] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [, setTitleOverride] = useRecoilState(TITLE_OVERRIDE);
 
     useEffect(() => {
-        if (id !== "new") {
-            createProductFetch(id, setProduct, setOriginalProduct, setLoading, setError);
-        } else {
+        if (id === "new") {
+            const emptyProduct = createEmptyProduct(type, user.id);
+            setProduct(emptyProduct);
+            setOriginalProduct(emptyProduct);
             setLoading(false);
             setError(null);
-            setOriginalProduct(product);
+        } else {
+            createProductFetch(id, setProduct, setOriginalProduct, setLoading, setError);
         }
-    }, [id]);
+    }, [id, type, user.id]);
+
+    useEffect(() => {
+        if (originalProduct) {
+            setTitleOverride(id === "new" ? "Create listing" : originalProduct.title);
+        } else {
+            setTitleOverride("Listing " + id);
+        }
+        return () => setTitleOverride(null);
+    }, [id, originalProduct, setTitleOverride]);
     
     if (loading) return <div className="Product">Loading...</div>
     if (error) return <div className="Product">{error}</div>

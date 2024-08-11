@@ -10,6 +10,7 @@ import Product from "./pages/Product";
 import {ChakraProvider} from "@chakra-ui/react";
 import {DialogsRoot} from "./util/Dialogs";
 import About from "./pages/About";
+import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
     {
@@ -18,11 +19,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <Page header footer><Dashboard/></Page>,
+        element: <Page title="Dashboard" header footer><Dashboard/></Page>,
     },
     {
         path: "/browse",
-        element: <Page header footer><Browse/></Page>,
+        element: <Page title="Browse" header footer><Browse/></Page>,
     },
     {
         path: "/games/:id",
@@ -33,8 +34,12 @@ const router = createBrowserRouter([
         element: <Page header footer><Product type="BRAND"/></Page>,
     },
     {
+        path: "/profile/:id",
+        element: <Page header footer><Profile/></Page>,
+    },
+    {
         path: "/about",
-        element: <Page header footer><About/></Page>,
+        element: <Page title="About Us" header footer><About/></Page>,
     },
 ]);
 

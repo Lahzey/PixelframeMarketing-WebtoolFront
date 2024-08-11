@@ -6,4 +6,5 @@
     padding-bottom: 5px;
     display: flex;
     flex-direction: column;
+    z-index: 99;
 }

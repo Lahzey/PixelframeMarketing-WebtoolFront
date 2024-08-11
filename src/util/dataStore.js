@@ -22,6 +22,11 @@ export const USER = atom({
     default: initialUserSelector
 });
 
+export const TITLE_OVERRIDE = atom({
+    key: "TITLE_OVERRIDE",
+    default: null
+})
+
 const TAGS_DATA = atom({
    key: "TAGS_DATA",
    default: {

@@ -18,12 +18,19 @@
 .Home-trailerContainer {
     grid-column: 1;
     grid-row: 2;
+    position: relative;
     overflow: hidden;
 }
 
 .Home-trailerContainer>video {
-    filter: blur(15px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    filter: blur(15px);
+    transform: scale(1.05, 1.05); /* Hides the blur edge offscreen */
 }
 
 .Home-content {
@@ -71,7 +78,7 @@
 }
 
 .Home-guideLink:active .Home-guideLinkArrowRight {
-    transform: translate(200px, 0) scale(8, 0.25);
+    transform: translate(400px, 0);
 }
 
 .Home-guideLinkLabelRight {
@@ -92,7 +99,7 @@
 }
 
 .Home-guideLink:active .Home-guideLinkArrowLeft {
-    transform: translate(-280px, 0) scale(11, 0.25);
+    transform: translate(-550px, 0);
 }
 
 .Home-guideLinkLabelLeft {

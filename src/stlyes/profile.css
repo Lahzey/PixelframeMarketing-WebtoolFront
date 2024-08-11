@@ -1,0 +1,41 @@
+.Profile {
+    display: grid;
+    grid-template-columns: 15% 1fr;
+    gap: 200px;
+}
+
+.Profile-userInfo {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap: 25px;
+}
+
+.Profile-userImage {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.Profile-userName {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.Profile-productListings {
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap: 25px;
+}
+
+.Profile-productListingsTitle {
+    font-size: 1.8em;
+    font-weight: bold;
+}
