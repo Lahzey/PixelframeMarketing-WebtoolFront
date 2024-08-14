@@ -39,7 +39,7 @@ export default function ProductBanner({product, index = 0, imageOverride = null}
                 </div>
                 <img className="ProductBanner-contentRight" src={imageOverride ? URL.createObjectURL(imageOverride) : getImageUrl(product.thumbnailId)}/>
             </div>
-            {isOwned ?
+            {isOwned && false ?
                 <div className="ProductBanner-buttonPanel">
                     <span className="button primary">Edit</span>
                     <span className="button secondary">Private/Public</span>

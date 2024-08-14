@@ -6,8 +6,8 @@ import {LabelCollapse} from "./components/Collapse";
 import Select from "react-select";
 import {TITLE_OVERRIDE, useAllTags, USER} from "../util/dataStore";
 import {IoMdEye, IoMdEyeOff} from "react-icons/io";
-import {FormControl, FormErrorMessage, FormLabel, Input, Textarea} from "@chakra-ui/react";
-import {autoCatch, autoCatchModal, createProduct, fetchProduct, getImageUrl, updateProduct, uploadImage} from "../util/apiRequests";
+import {Button, FormControl, FormErrorMessage, FormLabel, Input, Textarea} from "@chakra-ui/react";
+import {autoCatch, autoCatchModal, createProduct, deleteProduct, fetchProduct, getImageUrl, updateProduct, uploadImage} from "../util/apiRequests";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
 import PageEditor from "./components/PageEditor";
@@ -131,6 +131,7 @@ function ProductOverview({product}) {
 
 function ProductEdit({product, setProduct, inputErrors}) {
     const tagOptions = useAllTags().map(tag => { return {value: tag.name, label: tag.name, color: tag.categoryColor}; });
+    const navigate = useNavigate();
     
     const getOptionsFromValues = (values) => {
         return values.map(value => tagOptions.find(option => option.value === value));
@@ -147,6 +148,15 @@ function ProductEdit({product, setProduct, inputErrors}) {
             hasChanges: true
         });
     };
+    
+    const askDelete = () => {
+        spawnYesNoModal({title: "Confirm Delete", content: "Are you sure you wish to delete your listing?\nThis process cannot be undone!", onYes: () => {
+            deleteProduct(product.id).then(response => {
+                spawnAlert({content: "Listing deleted", status: "success"});
+                navigate("/dashboard");
+            }).catch(autoCatchModal("Failed to delete listing"));
+        }});
+    }
     
     const isPublic = product.visibility === "PUBLIC";
 
@@ -180,6 +190,7 @@ function ProductEdit({product, setProduct, inputErrors}) {
                     <span className="button light" onClick={() => updateProduct({visibility: isPublic ? "PRIVATE" : "PUBLIC"})}>
                         {isPublic ? <IoMdEye/> : <IoMdEyeOff/>}{isPublic ? "Public" : "Private"}
                     </span>
+                    <Button colorScheme="red" onClick={askDelete}>Delete</Button>
                 </div>
 
                 <div className="ProductEdit-split">

@@ -129,6 +129,10 @@ export function updateProduct(product) {
     return put("/api/products/" + product.id, product);
 }
 
+export function deleteProduct(id) {
+    return createRequest("delete", "/api/products/" + id, undefined, {});
+}
+
 export function filterProducts({type, ownerId, title, page, size}) {
     return get("/api/products",  {
         params: {

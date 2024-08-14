@@ -2,17 +2,18 @@ import "../../stlyes/login-popup.css"
 import React, {useState} from 'react';
 import {autoCatchAlert, autoCatchModal, fetchUser, getUserIdFromToken, loginUser, registerUser, updateUser, uploadImage} from "../../util/apiRequests";
 import {useRecoilState} from "recoil";
-import {USER} from "../../util/dataStore";
+import {LOGIN_REGISTER_ROLE, LOGIN_SHOW_REGISTER, SHOW_LOGIN, USER} from "../../util/dataStore";
 import {Button, Checkbox, FormControl, FormErrorMessage, FormLabel, Input, Modal, ModalContent, ModalFooter, ModalOverlay} from "@chakra-ui/react";
 import Select from "react-select";
 
-export default function LoginPopup({close, showRegister, registerRole}) {
+export default function LoginPopup() {
+    const [open, setOpen] = useRecoilState(SHOW_LOGIN);
     const [user, setUser] = useRecoilState(USER);
-    const [registerMode, setRegisterMode] = useState(!!showRegister);
+    const [registerMode, setRegisterMode] = useRecoilState(LOGIN_SHOW_REGISTER);
     
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
-    const [role, setRole] = useState(registerRole ?? '');
+    const [role, setRole] = useRecoilState(LOGIN_REGISTER_ROLE);
     const [image, setImage] = useState(null)
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -66,7 +67,7 @@ export default function LoginPopup({close, showRegister, registerRole}) {
                 fetchUser(getUserIdFromToken(token)).then((response) => {
                     setUser(response.data);
                     if (after) after(response.data);
-                    close();
+                    setOpen(false);
                 }).catch(autoCatchAlert());
             }).catch(autoCatchModal("Failed to log in.", errors => setInputErrors(errors)));
         }
@@ -102,7 +103,7 @@ export default function LoginPopup({close, showRegister, registerRole}) {
     const chosenRoleOption = roleOptions.find(option => option.value === role);
 
     return (
-        <Modal isOpen={true} onClose={close} scrollBehavior="outside" isCentered size="xl">
+        <Modal isOpen={open} onClose={() => setOpen(false)} scrollBehavior="outside" isCentered size="xl">
             <ModalOverlay/>
             <ModalContent>
                 <div className="LoginPopup">
@@ -148,7 +149,7 @@ export default function LoginPopup({close, showRegister, registerRole}) {
                     </form>
                 </div>
                 <ModalFooter justifyContent="space-between">
-                    <Button colorScheme="red" onClick={close}>Cancel</Button>
+                    <Button colorScheme="red" onClick={() => setOpen(false)}>Cancel</Button>
                     <span className="LoginPopup-functionLink"><b>Forgot password?</b></span>
                 </ModalFooter>
             </ModalContent>

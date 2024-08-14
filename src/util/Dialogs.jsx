@@ -4,6 +4,7 @@ import {DEQUEUE_ALERT, QUEUE_ALERT} from "./dataStore";
 import {Alert, AlertIcon, Button, CloseButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack} from "@chakra-ui/react";
 import {v4 as uuidv4} from 'uuid';
 import {useEffect, useState} from "react";
+import LoginPopup from "../pages/components/LoginPopup";
 
 const FADE_OUT_TIME = 500; // must match the css animation time
 const BUFFER = 10; // buffer to make sure timeouts do not trigger too early

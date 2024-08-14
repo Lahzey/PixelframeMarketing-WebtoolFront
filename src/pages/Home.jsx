@@ -1,15 +1,21 @@
 import "../stlyes/home.css";
 import {useRecoilState} from "recoil";
-import {USER} from "../util/dataStore";
+import {LOGIN_REGISTER_ROLE, LOGIN_SHOW_REGISTER, SHOW_LOGIN, USER} from "../util/dataStore";
 import {Link} from "react-router-dom";
-import {useState} from "react";
-import LoginPopup from "./components/LoginPopup";
 import icon from "../images/pixelframe_icon.png";
 import trailer from "../images/trailer.mp4"
 
 export default function Home() {
     const [user, setUser] = useRecoilState(USER);
-    const [loginForward, setLoginForward] = useState("");
+    const [, setShowLogin] = useRecoilState(SHOW_LOGIN);
+    const [, setRegisterMode] = useRecoilState(LOGIN_SHOW_REGISTER);
+    const [, setRegisterRole] = useRecoilState(LOGIN_REGISTER_ROLE);
+    
+    const registerAs = (role) => {
+        setShowLogin(true);
+        setRegisterMode(true);
+        setRegisterRole(role);
+    }
     
     return (
         <div className="Home">
@@ -31,7 +37,7 @@ export default function Home() {
                             <span className="Home-guideLinkArrowRight">{">"}</span>
                             <span className="Home-guideLinkLabelRight">Browse</span>
                         </Link> :
-                        <span onClick={() => setLoginForward("GAME_DEV")} className="Home-guideLink">
+                        <span onClick={() => registerAs("GAME_DEV")} className="Home-guideLink">
                             <span className="Home-guideLinkArrowRight">{">"}</span>
                             <span className="Home-guideLinkLabelRight">Im an Indie Dev</span>
                         </span>
@@ -43,15 +49,13 @@ export default function Home() {
                             <span className="Home-guideLinkLabelLeft">Dashboard</span>
                             <span className="Home-guideLinkArrowLeft">{"<"}</span>
                         </Link> :
-                        <span onClick={() => setLoginForward("ADVERTISER")} className="Home-guideLink">
+                        <span onClick={() => registerAs("ADVERTISER")} className="Home-guideLink">
                             <span className="Home-guideLinkLabelLeft">I want to Advertise</span>
                             <span className="Home-guideLinkArrowLeft">{"<"}</span>
                         </span>
                     }
                 </div>
             </div>
-
-            {loginForward ? <LoginPopup close={() => setLoginForward("")} showRegister registerRole={loginForward} /> : ""}
         </div>
     );
 }

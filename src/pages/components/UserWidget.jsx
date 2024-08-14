@@ -1,16 +1,16 @@
 import "../../stlyes/user-widget.css"
 import {useRecoilState} from "recoil";
 import {useRef, useState} from "react";
-import LoginPopup from "./LoginPopup";
-import {USER} from "../../util/dataStore";
+import {SHOW_LOGIN, USER} from "../../util/dataStore";
 import {getImageUrl} from "../../util/apiRequests";
 import {useNavigate} from "react-router-dom";
 import {FaUserCircle} from "react-icons/fa";
+import {Button} from "@chakra-ui/react";
 
 export default function UserWidget(props) {
     const [user, setUser] = useRecoilState(USER);
-    const [showLogin, setShowLogin] = useState(false);
     const [showAccountInfo, setShowAccountInfo] = useState(false);
+    const [, setShowLogin] = useRecoilState(SHOW_LOGIN);
     const navigate = useNavigate();
 
     const targetRef = useRef(null);
@@ -60,11 +60,10 @@ export default function UserWidget(props) {
             </div>
         );
     } else {
-        content = <span className="UserWidget-loginButton" onClick={() => setShowLogin(true)}>Log In</span>;
+        content = <Button colorScheme="gray" variant="outline" onClick={() => setShowLogin(true)}>Log In</Button>;
     }
     return (
         <div className="UserWidget" ref={targetRef}>
-            {showLogin ? <LoginPopup close={() => setShowLogin(false)}/> : ""}
             {content}
             {accountInfo}
         </div>

@@ -1,11 +1,13 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import {useEffect} from "react";
-import {useRecoilValue} from "recoil";
-import {TITLE_OVERRIDE} from "../../util/dataStore";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {SHOW_LOGIN, TITLE_OVERRIDE, USER} from "../../util/dataStore";
 
-export default function Page({children, title, header, footer, defaultPadding = true}) {
+export default function Page({children, title, header, footer, requireLogin, defaultPadding = true}) {
     const titleOverride = useRecoilValue(TITLE_OVERRIDE);
+    const user = useRecoilValue(USER);
+    const [, setShowLogin] = useRecoilState(SHOW_LOGIN);
     
     useEffect(() => {
         const baseTitle = "Pixelframe Marketing";
@@ -19,14 +21,25 @@ export default function Page({children, title, header, footer, defaultPadding = 
         components.push(<Header key="header"/>);
     }
     
-    components.push(
-        <div key="page" className="page">
-            <div className={"page-content" + (defaultPadding ? " defaultPadding" : "")}>
-                {children}
+    if (requireLogin && ! user) {
+        components.push(
+            <div key="page" className="page">
+                <div className={"page-content" + (defaultPadding ? " defaultPadding" : "")}>
+                    <p>You must be <span onClick={() => setShowLogin(true)} className="link">signed in</span> to view this page.</p>
+                </div>
+                <Footer key="footer"/>
             </div>
-            {footer ? <Footer key="footer"/> : ""}
-        </div>
-    );
+        );
+    } else {
+        components.push(
+            <div key="page" className="page">
+                <div className={"page-content" + (defaultPadding ? " defaultPadding" : "")}>
+                    {children}
+                </div>
+                {footer ? <Footer key="footer"/> : ""}
+            </div>
+        );
+    }
     
     return <div className="app">{components}</div>
 }

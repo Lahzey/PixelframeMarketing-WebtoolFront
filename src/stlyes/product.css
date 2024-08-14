@@ -134,6 +134,7 @@
 .ProductEdit-visibilityToggle {
     display: flex;
     justify-content: end;
+    gap: 20px;
 }
 .ProductEdit-split {
     display: grid;

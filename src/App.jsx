@@ -11,6 +11,7 @@ import {ChakraProvider} from "@chakra-ui/react";
 import {DialogsRoot} from "./util/Dialogs";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
+import LoginPopup from "./pages/components/LoginPopup";
 
 const router = createBrowserRouter([
     {
@@ -19,23 +20,23 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <Page title="Dashboard" header footer><Dashboard/></Page>,
+        element: <Page title="Dashboard" header footer requireLogin><Dashboard/></Page>,
     },
     {
         path: "/browse",
-        element: <Page title="Browse" header footer><Browse/></Page>,
+        element: <Page title="Browse" header footer requireLogin><Browse/></Page>,
     },
     {
         path: "/games/:id",
-        element: <Page header footer><Product type="GAME"/></Page>,
+        element: <Page header footer requireLogin><Product type="GAME"/></Page>,
     },
     {
         path: "/brands/:id",
-        element: <Page header footer><Product type="BRAND"/></Page>,
+        element: <Page header footer requireLogin><Product type="BRAND"/></Page>,
     },
     {
         path: "/profile/:id",
-        element: <Page header footer><Profile/></Page>,
+        element: <Page header footer requireLogin><Profile/></Page>,
     },
     {
         path: "/about",
@@ -49,6 +50,7 @@ export default function App() {
             <ChakraProvider>
                 <DialogsRoot>
                     <RouterProvider router={router}/>
+                    <LoginPopup/>
                 </DialogsRoot>
             </ChakraProvider>
         </RecoilRoot>

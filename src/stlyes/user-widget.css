@@ -1,6 +1,6 @@
 .UserWidget {
     display: flex;
-    align-items: stretch;
+    align-items: center;
 }
 
 .UserWidget-currentUser {
@@ -9,18 +9,6 @@
     padding-right: 10px;
     gap: 10px;
     cursor: pointer;
-}
-
-.UserWidget-loginButton {
-    text-decoration: none;
-    border: 2px solid var(--text-white);
-    padding: 10px 25px;
-    border-radius: 5px;
-}
-
-.UserWidget:hover .UserWidget-loginButton {
-    background-color: var(--text-white);
-    color: var(--text-black);
 }
 
 .UserWidget-userImage {

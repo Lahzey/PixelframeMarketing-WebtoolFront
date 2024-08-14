@@ -1,6 +1,5 @@
 import {atom, selector, useRecoilState} from "recoil";
 import {fetchTags, fetchUser, getToken, getUserIdFromToken} from "./apiRequests";
-import {get} from "axios";
 
 const initialUserSelector = selector({
     key: "initialUserSelector",
@@ -53,3 +52,18 @@ export function useAllTags() {
     
     return tagsData.value;
 }
+
+export const SHOW_LOGIN = atom({
+    key: "SHOW_LOGIN",
+    default: false
+});
+
+export const LOGIN_SHOW_REGISTER = atom({
+    key: "LOGIN_SHOW_REGISTER",
+    default: false
+});
+
+export const LOGIN_REGISTER_ROLE = atom({
+    key: "LOGIN_REGISTER_ROLE",
+    default: ""
+});
