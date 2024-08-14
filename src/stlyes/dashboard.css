@@ -9,6 +9,12 @@
     gap: 10px;
 }
 
+@media only screen and (max-width: 600px) {
+    .Dashboard {
+        width: 90%;
+    }
+}
+
 .Dashboard-header {
     display: flex;
     flex-direction: row;

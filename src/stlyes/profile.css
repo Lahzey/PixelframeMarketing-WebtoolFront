@@ -4,7 +4,7 @@
     gap: 200px;
 }
 
-.Profile-userInfo {
+.Profile-left {
     grid-row: 1;
     grid-column: 1;
     display: flex;
@@ -25,7 +25,7 @@
     font-weight: bold;
 }
 
-.Profile-productListings {
+.Profile-right {
     grid-row: 1;
     grid-column: 2;
     display: flex;

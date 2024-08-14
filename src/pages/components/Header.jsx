@@ -3,6 +3,7 @@ import {useState} from "react";
 import icon from "../../images/pixelframe_icon.png";
 import {Link, NavLink} from "react-router-dom";
 import UserWidget from "./UserWidget";
+import {RxHamburgerMenu} from "react-icons/rx";
 
 export default function Header() {
     const [isExpanded, setExpanded] = useState(false);
@@ -15,7 +16,7 @@ export default function Header() {
                 <span>Pixelframe Marketing</span>
             </Link>
             <span className="Header-toggle" onClick={() => setExpanded(!isExpanded)}>
-                X
+                <RxHamburgerMenu/>
             </span>
             <div className={"Header-contentWrapper " + collapseClasses}>
                 <div className="Header-content ">

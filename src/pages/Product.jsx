@@ -218,7 +218,7 @@ function ProductEdit({product, setProduct, inputErrors}) {
                     </div>
 
                     <div className="ProductEdit-right">
-                        <FormControl isInvalid={inputErrors["thumbnailUpload"] !== undefined}>
+                        <FormControl isInvalid={inputErrors["image"] !== undefined}>
                             <FormLabel className="ProductEdit-label">Thumbnail picture (shown in banner)</FormLabel>
                             <Input
                                 type={"file"}
@@ -230,7 +230,7 @@ function ProductEdit({product, setProduct, inputErrors}) {
                                     }
                                 }}
                             />
-                            <FormErrorMessage>{inputErrors["thumbnailUpload"]}</FormErrorMessage>
+                            <FormErrorMessage>{inputErrors["image"]}</FormErrorMessage>
                         </FormControl>
                         <img className="ProductEdit-previewImage"
                             src={product.thumbnailUpload ? URL.createObjectURL(product.thumbnailUpload) : getImageUrl(product.thumbnailId)}

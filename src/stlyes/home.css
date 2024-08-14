@@ -15,6 +15,13 @@
     font-size: 2.5em;
 }
 
+
+@media only screen and (max-width: 600px) {
+    .Home-header {
+        font-size: 0.8rem;
+    }
+}
+
 .Home-trailerContainer {
     grid-column: 1;
     grid-row: 2;

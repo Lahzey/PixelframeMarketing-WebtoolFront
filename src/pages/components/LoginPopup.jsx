@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {autoCatchAlert, autoCatchModal, fetchUser, getUserIdFromToken, loginUser, registerUser, updateUser, uploadImage} from "../../util/apiRequests";
 import {useRecoilState} from "recoil";
 import {USER} from "../../util/dataStore";
-import {Checkbox, FormControl, FormErrorMessage, FormLabel, Input} from "@chakra-ui/react";
+import {Button, Checkbox, FormControl, FormErrorMessage, FormLabel, Input, Modal, ModalContent, ModalFooter, ModalOverlay} from "@chakra-ui/react";
 import Select from "react-select";
 
 export default function LoginPopup({close, showRegister, registerRole}) {
@@ -102,53 +102,57 @@ export default function LoginPopup({close, showRegister, registerRole}) {
     const chosenRoleOption = roleOptions.find(option => option.value === role);
 
     return (
-        <div className="LoginPopup modal">
-            <form className="LoginPopup-form" onSubmit={handleSubmit}>
-                <div className="LoginPopup-inputContainer">
-                    {generateInputField(email, setEmail, "email", "email", inputErrors)}
-                    {registerMode ? generateInputField(username, setUsername, "username", "text", inputErrors) : ""}
-                    {generateInputField(password, setPassword, "password", "password", inputErrors)}
-                    {registerMode ? generateInputField(confirmPassword, setConfirmPassword, "confirmPassword", "password", inputErrors) : ""}
-                    
-                    {registerMode ? [
-                        <label htmlFor={"role"}><b>Select your account type</b></label>,
-                        <Select name="role" value={chosenRoleOption} options={roleOptions} onChange={(selection) => setRole(selection.value)}/>
-                    ] : ""}
-                    
-                    {registerMode ? [
-                        <FormControl isInvalid={inputErrors["image"] !== undefined}>
-                            <FormLabel>Upload your profile picture</FormLabel>
-                            <Input
-                                type={"file"}
-                                accept={".jpg,.jpeg,.png,.gif,.svg"}
-                                name={"image"}
-                                onChange={onImageChange}
-                                backgroundColor="white"
-                            />
-                            <FormErrorMessage>{inputErrors["image"]}</FormErrorMessage>
-                        </FormControl>,
-                        image ? <img src={URL.createObjectURL(image)} className="LoginPopup-previewImage" alt="Your upload"/> :
-                            <img src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" className="LoginPopup-previewImage" alt="Default if no upload is done"/>
-                    ] : ""}
+        <Modal isOpen={true} onClose={close} scrollBehavior="outside" isCentered size="xl">
+            <ModalOverlay/>
+            <ModalContent>
+                <div className="LoginPopup">
+                    <form className="LoginPopup-form" onSubmit={handleSubmit}>
+                        <div className="LoginPopup-inputContainer">
+                            {generateInputField(email, setEmail, "email", "email", inputErrors)}
+                            {registerMode ? generateInputField(username, setUsername, "username", "text", inputErrors) : ""}
+                            {generateInputField(password, setPassword, "password", "password", inputErrors)}
+                            {registerMode ? generateInputField(confirmPassword, setConfirmPassword, "confirmPassword", "password", inputErrors) : ""}
 
-                    <button type="submit" className="LoginPopup-loginButton button success">{registerMode ? "Register" : "Login"}</button>
-                    <div className="LoginPopup-belowLogin">
-                        {registerMode ?
-                            <div></div>/* filler for flex layout */ :
-                            <Checkbox checked={remember} sx={{'& .chakra-checkbox__control': {borderColor: 'gray.500'}}} onChange={e => setRemember(e.target.checked)}>Remember me</Checkbox>
-                        }
-                        <span className="LoginPopup-registerMessage">
+                            {registerMode ? [
+                                <label htmlFor={"role"}><b>Select your account type</b></label>,
+                                <Select name="role" value={chosenRoleOption} options={roleOptions} onChange={(selection) => setRole(selection.value)}/>
+                            ] : ""}
+
+                            {registerMode ? [
+                                <FormControl isInvalid={inputErrors["image"] !== undefined}>
+                                    <FormLabel>Upload your profile picture</FormLabel>
+                                    <Input
+                                        type={"file"}
+                                        accept={".jpg,.jpeg,.png,.gif,.svg"}
+                                        name={"image"}
+                                        onChange={onImageChange}
+                                        backgroundColor="white"
+                                    />
+                                    <FormErrorMessage>{inputErrors["image"]}</FormErrorMessage>
+                                </FormControl>,
+                                image ? <img src={URL.createObjectURL(image)} className="LoginPopup-previewImage" alt="Your upload"/> :
+                                    <img src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" className="LoginPopup-previewImage" alt="Default if no upload is done"/>
+                            ] : ""}
+
+                            <button type="submit" className="LoginPopup-loginButton button success">{registerMode ? "Register" : "Login"}</button>
+                            <div className="LoginPopup-belowLogin">
+                                {registerMode ?
+                                    <div></div>/* filler for flex layout */ :
+                                    <Checkbox checked={remember} sx={{'& .chakra-checkbox__control': {borderColor: 'gray.500'}}} onChange={e => setRemember(e.target.checked)}>Remember me</Checkbox>
+                                }
+                                <span className="LoginPopup-registerMessage">
                             {registerMode ? "Already" : "Don't"} have an account? <b onClick={() => setRegisterMode(!registerMode)} className="LoginPopup-functionLink">{registerMode ? "Log In" : "Register now"}</b>
                         </span>
-                    </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div className="LoginPopup-footer">
-                    <button type="button" onClick={close} className="LoginPopup-cancelButton button error">Cancel</button>
+                <ModalFooter justifyContent="space-between">
+                    <Button colorScheme="red" onClick={close}>Cancel</Button>
                     <span className="LoginPopup-functionLink"><b>Forgot password?</b></span>
-                </div>
-            </form>
-        </div>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }
 

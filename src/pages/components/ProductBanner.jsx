@@ -4,6 +4,7 @@ import {useAllTags, USER} from "../../util/dataStore";
 import {Link} from "react-router-dom";
 import {getImageUrl} from "../../util/apiRequests";
 import Rand from "rand-seed";
+import {Tooltip} from "@chakra-ui/react";
 
 export default function ProductBanner({product, index = 0, imageOverride = null}) {
     const user = useRecoilValue(USER);
@@ -14,7 +15,11 @@ export default function ProductBanner({product, index = 0, imageOverride = null}
     
     var tagSpans = product.tags.map((tagName) => {
         const tag = allTags.find(tag => tag.name === tagName);
-        return <span className="ProductBanner-tag" style={{backgroundColor: tag?.categoryColor??"#111"}}>{tagName}</span>
+        return (
+            <Tooltip label={tag?.categoryName ?? "Miscellaneous"}>
+                <span className="ProductBanner-tag" style={{backgroundColor: tag?.categoryColor ?? "#111"}}>{tagName}</span>
+            </Tooltip>
+        );
     });
 
     return (

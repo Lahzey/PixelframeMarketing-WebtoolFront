@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 import LoginPopup from "./components/LoginPopup";
 import icon from "../images/pixelframe_icon.png";
+import trailer from "../images/trailer.mp4"
 
 export default function Home() {
     const [user, setUser] = useRecoilState(USER);
@@ -18,7 +19,7 @@ export default function Home() {
             </div>
             <div className="Home-trailerContainer">
                 <video preload="auto" autoPlay loop="loop" muted="muted">
-                    <source src="https://media.sciencephoto.com/image/k0054472/preview/K0054472-Apollo_11_Saturn_V_launch_close-up,_1969.mp4" type="video/mp4"/>
+                    <source src={trailer} type="video/mp4"/>
                     Sorry, your browser does not support HTML5 video.
                 </video>
             </div>
@@ -32,7 +33,7 @@ export default function Home() {
                         </Link> :
                         <span onClick={() => setLoginForward("GAME_DEV")} className="Home-guideLink">
                             <span className="Home-guideLinkArrowRight">{">"}</span>
-                            <span className="Home-guideLinkLabelRight">Browse</span>
+                            <span className="Home-guideLinkLabelRight">Im an Indie Dev</span>
                         </span>
                     }
                 </div>
@@ -43,7 +44,7 @@ export default function Home() {
                             <span className="Home-guideLinkArrowLeft">{"<"}</span>
                         </Link> :
                         <span onClick={() => setLoginForward("ADVERTISER")} className="Home-guideLink">
-                            <span className="Home-guideLinkLabelLeft">Dashboard</span>
+                            <span className="Home-guideLinkLabelLeft">I want to Advertise</span>
                             <span className="Home-guideLinkArrowLeft">{"<"}</span>
                         </span>
                     }
