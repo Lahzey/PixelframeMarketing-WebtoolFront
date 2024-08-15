@@ -12,6 +12,7 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
 import PageEditor from "./components/PageEditor";
 import {ProductRevenueChart} from "./components/ProductRevenueChart";
+import {uploadObjectWithImage} from "../util/Uploader";
 
 export default function Product({type = "GAME"}) {
     const { id } = useParams();
@@ -322,52 +323,29 @@ function createProductFetch(id, setProduct, setOriginalProduct, setLoading, setE
 function submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate, confirmed = false) {
     if (!confirmed) {
         const isPublic = product.visibility === "PUBLIC";
-        const message = 
+        const message =
             <p>
                 Are you sure you want to save your changes?<br/>
                 Your product is <b>{product.visibility}</b> and will therefore{isPublic ? "" : " not"} be considered for matching.
             </p>
-        spawnYesNoModal({title: "Confirm Save", content: message, onYes: () => {
-            submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate, true);
-        }});
+        spawnYesNoModal({
+            title: "Confirm Save", content: message, onYes: () => {
+                submitProduct(product, setProduct, setOriginalProduct, setInputErrors, navigate, true);
+            }
+        });
         return;
     }
     setInputErrors({});
-    
-    // handle image upload
-    if (product.thumbnailUpload) {
-        uploadImage(product.thumbnailUpload).then(response => {
-            const newProduct = {
-                ...product,
-                thumbnailId: response.data.id,
-                thumbnailUpload: null
-            }
-            setProduct(newProduct);
-            submitProduct(newProduct, setProduct, setOriginalProduct, setInputErrors, navigate, true);
-        }).catch(autoCatchModal("Failed to upload thumbnail image", (validationErrors) => {
-            setInputErrors(validationErrors);
-        }));
-        return;
-    }
-    
-    const productToSubmit = {
-        type: product.type,
-        id: product.id,
-        ownerId: product.ownerId,
-        title: product.title,
-        visibility: product.visibility,
-        tags: product.tags,
-        ageRestriction: product.ageRestriction,
-        thumbnailId: product.thumbnailId,
-        description: product.description,
-        pageContent: product.pageContent,
-    }
-    const promise = product.id ? updateProduct(productToSubmit) : createProduct(productToSubmit);
-    promise.then(response => {
-        const product = response.data;
-        setProduct(product);
-        setOriginalProduct(product);
-        navigate((product.type === "GAME" ? "/games/" : "/brands/") + product.id);
+
+    uploadObjectWithImage(
+        product,
+        "thumbnailUpload",
+        "thumbnailId",
+        "Save changes",
+        "Upload image",
+        "Update properties",
+        (toUpload) => toUpload.id ? updateProduct(toUpload) : createProduct(toUpload)
+    ).then(response => {
         spawnAlert({content: "Changes saved successfully", status: "success"});
     }).catch(autoCatchModal("Failed to " + (product.id ? "update" : "create") + " product", (validationErrors) => {
         setInputErrors(validationErrors);

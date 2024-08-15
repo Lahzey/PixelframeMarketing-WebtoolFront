@@ -80,11 +80,11 @@ export function autoCatchModal(title, validationHandler = null) {
     });
 }
 
-export function uploadImage(image) {
+export function uploadImage(image, onUploadProgress = null) {
     const formData = new FormData();
     formData.append("upload", image);
     
-    return post("/api/img", formData, { headers: {'Content-Type': 'multipart/form-data'} });
+    return post("/api/img", formData, { headers: {'Content-Type': 'multipart/form-data'}, onUploadProgress: onUploadProgress ?? undefined });
 }
 
 export function getImageUploadAdapter() {

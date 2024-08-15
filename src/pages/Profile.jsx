@@ -4,19 +4,21 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {autoCatch, autoCatchAlert, autoCatchModal, fetchUser, getImageUrl, updateUser, uploadImage} from "../util/apiRequests";
 import {useRecoilState} from "recoil";
-import {TITLE_OVERRIDE} from "../util/dataStore";
+import {TITLE_OVERRIDE, USER} from "../util/dataStore";
 import {Button, FormControl, FormErrorMessage, FormLabel, HStack, Input} from "@chakra-ui/react";
 import {BsPencilFill} from "react-icons/bs";
 import {MdDelete} from "react-icons/md";
 import {BiSolidSave} from "react-icons/bi";
 import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
+import {uploadObjectWithImage} from "../util/Uploader";
 
 export default function Profile(props) {
     const { id } = useParams();
     const [user, setUser] = useState({loading: true});
+    const [currentUser, setCurrentUser] = useRecoilState(USER);
     const [, setTitleOverride] = useRecoilState(TITLE_OVERRIDE);
     const [editMode, setEditMode] = useState(false);
-    const isOwner = user && user.id === id;
+    const isOwner = currentUser && currentUser.id === id;
 
     useEffect(() => {
         fetchUser(id).then(response => {
@@ -51,7 +53,7 @@ export default function Profile(props) {
     }
     
     if (isOwner && editMode) {
-        return <ProfileEdit user={user} setUser={setUser} setEditMode={setEditMode}/>
+        return <ProfileEdit user={user} setUser={setUser} setCurrentUser={setCurrentUser} setEditMode={setEditMode}/>
     }
 
     return (
@@ -69,42 +71,46 @@ export default function Profile(props) {
     );
 }
 
-function ProfileEdit({user, setUser, setEditMode}) {
+function ProfileEdit({user, setUser, setCurrentUser, setEditMode}) {
     const [inputErrors, setInputErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const updateProfile = (newProps) => {
         setUser({...user, ...newProps, hasChanges: true});
     }
     
     const discard = () => {
         spawnYesNoModal({title: "Confirm discard", content: "Are you sure you wish to discard your changes?", onYes: () => {
+            setLoading(true);
             fetchUser(user.id).then(response => {
                 setUser(response.data);
                 setEditMode(false);
-            }).catch(autoCatchAlert("Failed to re-fetch user"));
+            }).catch(autoCatchAlert("Failed to re-fetch user")).finally(() => {
+                setLoading(false);
+            });
         }});
     }
     
     const save = () => {
         setInputErrors({});
-        const validationHandler = (validationErrors) => {
-            setInputErrors(validationErrors);
-        };
-        
-        const update = (user) => updateUser(user).then(response => {
+        setLoading(true);
+        uploadObjectWithImage(
+            user, 
+            "imageUpload", 
+            "imageId", 
+            "Updating Profile", 
+            "Upload profile picture", 
+            "Save profile", 
+            (toUpload) => updateUser(toUpload)
+        ).then(response => {
             setUser(response.data);
+            setCurrentUser(response.data);
             spawnAlert({content: "Profile updated", status: "success"});
             setEditMode(false);
-        }).catch(autoCatchModal("Failed to save changes", validationHandler));
-        
-        if (user.imageUpload) {
-            uploadImage(user.imageUpload).then(response => {
-                const newUser = {...user, imageUpload: null, imageId: response.data.id};
-                setUser(newUser);
-                update(newUser);
-            }).catch(autoCatchModal("Failed to save changes", validationHandler));
-        } else {
-            update(user);
-        }
+        }).catch(autoCatchModal("Failed to save changes", (validationErrors) => {
+            setInputErrors(validationErrors);
+        })).finally(() => {
+            setLoading(false);
+        });
     }
     
     return (
@@ -126,8 +132,8 @@ function ProfileEdit({user, setUser, setEditMode}) {
                   <FormErrorMessage>{inputErrors["image"]}</FormErrorMessage>
               </FormControl>
               <HStack justify="space-between">
-                  <Button leftIcon={<MdDelete/>} colorScheme="red" onClick={discard}>Discard</Button>
-                  <Button leftIcon={<BiSolidSave/>} colorScheme="green" onClick={save}>Save</Button>
+                  <Button leftIcon={<MdDelete/>} isLoading={loading} colorScheme="red" onClick={discard}>Discard</Button>
+                  <Button leftIcon={<BiSolidSave/>} isLoading={loading} colorScheme="green" onClick={save}>Save</Button>
               </HStack>
           </div>
           <div className="Profile-right">

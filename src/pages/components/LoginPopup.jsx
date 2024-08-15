@@ -20,6 +20,7 @@ export default function LoginPopup() {
     
     const [remember, setRemember] = useState(true);
     const [inputErrors, setInputErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const onImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -27,8 +28,7 @@ export default function LoginPopup() {
         }
     };
     
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         setInputErrors({});
         
         let newInputErrors = new Map();
@@ -59,6 +59,7 @@ export default function LoginPopup() {
         }
         
         const login = (after = null) => {
+            setLoading(true);
             return loginUser(user).then(response => {
                 const storage = remember ? localStorage : sessionStorage;
                 const token = response.data;
@@ -68,11 +69,13 @@ export default function LoginPopup() {
                     setUser(response.data);
                     if (after) after(response.data);
                     setOpen(false);
+                    setLoading(false);
                 }).catch(autoCatchAlert());
             }).catch(autoCatchModal("Failed to log in.", errors => setInputErrors(errors)));
         }
 
         const registerWithImage = () => {
+            setLoading(true);
             registerUser(user).then(registerResponse => {
                 login((user) => {
                     uploadImage(image).then((uploadResponse) => {
@@ -81,13 +84,14 @@ export default function LoginPopup() {
                         }).catch(autoCatchModal("Failed to update user with new image.\nYour account has still been created, please try updating your profile picture at a later time."))
                     }).catch(autoCatchModal("Image upload failed.\nYour account has still been created, please try updating your profile picture at a later time."));
                 });
-            }).catch(autoCatchModal("User registration failed.", errors => setInputErrors(errors)));
+            }).catch(autoCatchModal("User registration failed.", errors => setInputErrors(errors))).finally(() => setLoading(false));
         }
         
         const register = () => {
+            setLoading(true);
             registerUser(user).then(response => {
                 login();
-            }).catch(autoCatchModal("User registration failed.", errors => setInputErrors(errors)));
+            }).catch(autoCatchModal("User registration failed.", errors => setInputErrors(errors))).finally(() => setLoading(false));
         }
         
         if (registerMode && image) {
@@ -107,7 +111,7 @@ export default function LoginPopup() {
             <ModalOverlay/>
             <ModalContent>
                 <div className="LoginPopup">
-                    <form className="LoginPopup-form" onSubmit={handleSubmit}>
+                    <div className="LoginPopup-form">
                         <div className="LoginPopup-inputContainer">
                             {generateInputField(email, setEmail, "email", "email", inputErrors)}
                             {registerMode ? generateInputField(username, setUsername, "username", "text", inputErrors) : ""}
@@ -135,7 +139,7 @@ export default function LoginPopup() {
                                     <img src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" className="LoginPopup-previewImage" alt="Default if no upload is done"/>
                             ] : ""}
 
-                            <button type="submit" className="LoginPopup-loginButton button success">{registerMode ? "Register" : "Login"}</button>
+                            <Button colorScheme="green" isLoading={loading} onClick={handleSubmit}>{registerMode ? "Register" : "Login"}</Button>
                             <div className="LoginPopup-belowLogin">
                                 {registerMode ?
                                     <div></div>/* filler for flex layout */ :
@@ -146,7 +150,7 @@ export default function LoginPopup() {
                         </span>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <ModalFooter justifyContent="space-between">
                     <Button colorScheme="red" onClick={() => setOpen(false)}>Cancel</Button>

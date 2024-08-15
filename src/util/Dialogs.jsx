@@ -1,10 +1,7 @@
 import "../stlyes/dialogs.css";
-import {useRecoilState} from "recoil";
-import {DEQUEUE_ALERT, QUEUE_ALERT} from "./dataStore";
 import {Alert, AlertIcon, Button, CloseButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack} from "@chakra-ui/react";
 import {v4 as uuidv4} from 'uuid';
 import {useEffect, useState} from "react";
-import LoginPopup from "../pages/components/LoginPopup";
 
 const FADE_OUT_TIME = 500; // must match the css animation time
 const BUFFER = 10; // buffer to make sure timeouts do not trigger too early
@@ -20,7 +17,7 @@ function removeAlert(id) {
     setTimeout(rerender, BUFFER + FADE_OUT_TIME);
 }
 
-function removeModal(id) {
+export function removeModal(id) {
     modals = modals.filter(modal => modal.id !== id);
     rerender();
 }
@@ -57,7 +54,9 @@ export function DialogsRoot({children}) {
     // create content of modal, which will reflect top most modal
     const modal = modals.length > 0 ? modals[modals.length - 1] : null;
     let modalContent;
+    let modalClosable = true;
     if (modal) {
+        modalClosable = modal.closable;
         modalContent = (
             <ModalContent>
                 {
@@ -70,15 +69,17 @@ export function DialogsRoot({children}) {
                             {modal.title}
                         </ModalHeader>
                 }
-                <ModalCloseButton/>
+                {modalClosable ? <ModalCloseButton/> : ""}
                 <ModalBody>
                     {modal.content}
                 </ModalBody>
-                <ModalFooter gap="10px" justifyContent={modal.buttons.length > 1 ? "space-between" : "end"}>
-                    {modal.buttons.map((button) => {
-                        return <Button colorScheme={button.colorScheme} onClick={button.onClick}>{button.text}</Button>;
-                    })}
-                </ModalFooter>
+                {modal.buttons.length > 0 ? 
+                    <ModalFooter gap="10px" justifyContent={modal.buttons.length > 1 ? "space-between" : "end"}>
+                        {modal.buttons.map((button) => {
+                            return <Button colorScheme={button.colorScheme} onClick={button.onClick}>{button.text}</Button>;
+                        })}
+                    </ModalFooter> : ""
+                }
             </ModalContent>
         );
     } else {
@@ -93,7 +94,7 @@ export function DialogsRoot({children}) {
                 <Stack spacing={3} className="DialogsRoot-alertStack">
                     {alertElements}
                 </Stack>
-                <Modal isCentered isOpen={modals.length > 0} onClose={() => removeModal(modals[modals.length - 1].id)}>
+                <Modal isCentered isOpen={modals.length > 0} onClose={() => removeModal(modals[modals.length - 1].id)} closeOnEsc={modalClosable} closeOnOverlayClick={modalClosable}>
                     <ModalOverlay/>
                     {modalContent}
                 </Modal>
@@ -132,7 +133,8 @@ export function spawnOkModal({title, content, status = ""}) {
                 onClick: () => removeModal(id)
             }
         ],
-        status: status
+        status: status,
+        closable: true
     }
     modals.push(modal);
     rerender();
@@ -159,7 +161,21 @@ export function spawnYesNoModal({title, content, onYes, yesText = "confirm", noT
                 }
             }
         ],
-        status: "info"
+        status: "info",
+        closable: true
+    }
+    modals.push(modal);
+    rerender();
+}
+
+export function spawnBlockingModal({title, content, modalId, status = "info"}) {
+    const modal = {
+        id: modalId,
+        title: title,
+        content: content,
+        buttons: [],
+        status: status,
+        closable: false
     }
     modals.push(modal);
     rerender();
