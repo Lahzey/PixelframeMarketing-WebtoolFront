@@ -3,7 +3,7 @@ import ProductList from "./components/ProductList";
 import {useRecoilValue} from "recoil";
 import {USER} from "../util/dataStore";
 import {useState} from "react";
-import {Input, InputGroup, InputLeftElement} from "@chakra-ui/react";
+import {Input, InputGroup, InputLeftElement, VStack} from "@chakra-ui/react";
 import {IoIosSearch} from "react-icons/io";
 
 export default function Browse() {
@@ -11,7 +11,20 @@ export default function Browse() {
     const [titleFilter, setTitleFilter] = useState("");
 
     const type = user.role === "GAME_DEV" ? "BRAND" : (user.role === "ADVERTISER" ? "GAME" : "");
-    const query = {type: type,  ownerId: "", title: titleFilter};
+
+    let productList;
+    if (!type) {
+        const gameQuery = {type: "GAME",  ownerId: "", title: titleFilter};
+        const brandQuery = {type: "BRAND",  ownerId: "", title: titleFilter};
+        productList = <VStack spacing="20px" align="stretch">
+            <span>Games:</span>
+            <ProductList query={gameQuery}/>
+            <span>Brands:</span>
+            <ProductList query={brandQuery}/>
+        </VStack>
+    } else {
+        productList = <ProductList query={{type: type,  ownerId: "", title: titleFilter}}/>;
+    }
 
     return (
         <div className="Browse">
@@ -23,7 +36,7 @@ export default function Browse() {
                     <Input type="text" placeholder="Filter" onChange={e => setTitleFilter(e.target.value)} />
                 </InputGroup>
             </div>
-            <ProductList query={query} />
+            {productList}
         </div>
     );
 }

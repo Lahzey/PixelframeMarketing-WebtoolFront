@@ -7,7 +7,7 @@ import Select from "react-select";
 import {TITLE_OVERRIDE, useAllTags, USER} from "../util/dataStore";
 import {IoMdEye, IoMdEyeOff} from "react-icons/io";
 import {Button, FormControl, FormErrorMessage, FormLabel, Input, Textarea} from "@chakra-ui/react";
-import {autoCatch, autoCatchModal, createProduct, deleteProduct, fetchProduct, getImageUrl, updateProduct, uploadImage} from "../util/apiRequests";
+import {autoCatch, autoCatchModal, createProduct, deleteProduct, fetchProduct, getImageUrl, updateProduct} from "../util/apiRequests";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {spawnAlert, spawnYesNoModal} from "../util/Dialogs";
 import PageEditor from "./components/PageEditor";
@@ -46,7 +46,7 @@ export default function Product({type = "GAME"}) {
     
     if (loading) return <div className="Product">Loading...</div>
     if (error) return <div className="Product">{error}</div>
-    else return <ProductContent product={product} setProduct={setProduct} originalProduct={originalProduct} setOriginalProduct={setOriginalProduct} isOwner={product.ownerId === user.id}/>
+    else return <ProductContent product={product} setProduct={setProduct} originalProduct={originalProduct} setOriginalProduct={setOriginalProduct} isOwner={(product.ownerId === user.id) || (user.role === "ADMIN")}/>
 }
 
 function ProductContent({product, setProduct, originalProduct, setOriginalProduct, isOwner}) {
